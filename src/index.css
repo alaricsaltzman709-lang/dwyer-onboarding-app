@@ -264,10 +264,19 @@ body::after {
   line-height: 1.1;
   letter-spacing: -0.03em;
 }
-.landing-page h1 span.gradient-text {
-  background: linear-gradient(to right, var(--gradient-blue-start), var(--gradient-blue-end));
+.gradient-animated {
+  background: linear-gradient(-45deg, var(--gradient-blue-start), var(--gradient-blue-end), #3b82f6, var(--gradient-blue-start));
+  background-size: 300%;
+  animation: shineTitle 5s linear infinite;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+@keyframes shineTitle {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 .landing-page p {
   font-size: 1.1rem;

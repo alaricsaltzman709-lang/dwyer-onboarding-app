@@ -508,7 +508,7 @@ export default function App() {
         <div className="particle" style={{ width: '8px', height: '8px', top: '15%', left: '80%', animationDelay: '2s' }}></div>
         <div className="particle" style={{ width: '15px', height: '15px', top: '60%', left: '10%', animationDelay: '1s' }}></div>
         <div className="particle" style={{ width: '10px', height: '10px', top: '70%', left: '85%', animationDelay: '3s' }}></div>
-        <LandingPage onLogin={setUser} agents={agents} />
+        <LandingPage onLogin={setUser} agents={agents} setAgents={setAgents} />
       </>
     );
   }
@@ -548,12 +548,40 @@ export default function App() {
   );
 }
 
-function LandingPage({ onLogin, agents }) {
+function LandingPage({ onLogin, agents, setAgents }) {
   const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const [tab, setTab] = useState('agent');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  const [regFirstName, setRegFirstName] = useState('');
+  const [regLastName, setRegLastName] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regUsername, setRegUsername] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    const newId = agents.length > 0 ? Math.max(...agents.map(a => a.id)) + 1 : 1;
+    const newAgent = {
+      id: newId,
+      name: `${regFirstName} ${regLastName}`,
+      username: regUsername,
+      password: regPassword,
+      email: regEmail,
+      metrics: { policyReviews: 0, quotedHHs: 0, itemsSold: 0, emailsResolved: 0, callVolume: 0, talkTime: 0, selfGeneratedQuotedHHs: 0, googleReviews: 0 },
+      training: {}
+    };
+    // Initialize training properly
+    trainingModules.forEach(mod => { newAgent.training[mod.id] = 'Not Started'; });
+    setAgents([...agents, newAgent]);
+    setShowRegister(false);
+    setUsername(regUsername);
+    setPassword(regPassword);
+    setShowLogin(true);
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -585,37 +613,45 @@ function LandingPage({ onLogin, agents }) {
           </div>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <button className="btn btn-outline" onClick={() => setShowLogin(true)}>Login</button>
+            <button className="btn" onClick={() => setShowRegister(true)}>Request Credentials</button>
             <button className="btn" onClick={() => setShowLogin(true)}>Access Dashboard &rarr;</button>
           </div>
         </nav>
 
         <div className="landing-page">
           <div className="pill-badge">Built for Insurance Sales Teams</div>
-          <h1>The Training Command Center</h1>
-          <h1 className="gradient-text" style={{ fontSize: '4.5rem' }}>for Insurance Teams</h1>
-          <p>
-            Stop guessing. Start winning. Track your onboarding journey through 33 comprehensive training modules, daily quotas, quoted households,
-            and bind in real time — with live scorecards and accountability playbooks.
+          <h1 className="gradient-animated" style={{ color: 'var(--primary-blue)', marginBottom: 0 }}>The Training Command Center</h1>
+          <h1 className="gradient-animated" style={{ fontSize: '4.5rem', marginTop: 0 }}>for Insurance Teams</h1>
+          <p style={{ fontSize: '1.25rem', maxWidth: '800px' }}>
+            Stop guessing. Start winning. Accelerate your career with our exclusive onboarding platform. 
+            Master the flow of auto and home quotes, build your personal brand, overcome daily objections, and become a top-producing agent. 
+            With 33 comprehensive training modules, script libraries, and real-time active tracking, you have everything you need to succeed.
           </p>
-          <button className="btn" style={{ fontSize: '1.15rem', padding: '1rem 2rem' }} onClick={() => setShowLogin(true)}>
-            Access Dashboard &rarr;
-          </button>
-          <div className="landing-cards">
+          <div style={{ display: 'flex', gap: '1rem', justifyItems: 'center', marginTop: '1.5rem' }}>
+            <button className="btn" style={{ fontSize: '1.15rem', padding: '1rem 2rem' }} onClick={() => setShowRegister(true)}>
+              Request Credentials
+            </button>
+            <button className="btn btn-outline" style={{ fontSize: '1.15rem', padding: '1rem 2rem' }} onClick={() => setShowLogin(true)}>
+              Access Dashboard &rarr;
+            </button>
+          </div>
+          
+          <div className="landing-cards" style={{ marginTop: '4rem', paddingBottom: '4rem' }}>
             <div className="landing-card">
               <h4>33 Modules</h4>
-              <p>Complete Training Library</p>
+              <p>Complete Training Library covering Auto, Home, Umbrella and more.</p>
             </div>
             <div className="landing-card">
-              <h4>0% → 100%</h4>
-              <p>Progressive Tracking</p>
+              <h4>Active Tracking</h4>
+              <p>See exactly what you're working on and what's next.</p>
             </div>
             <div className="landing-card">
               <h4>Real-Time</h4>
-              <p>Dashboard Updates</p>
+              <p>Immediate dashboard updates as you progress.</p>
             </div>
             <div className="landing-card">
               <h4>All Roles</h4>
-              <p>Sales, Service & More</p>
+              <p>Designed for Sales, Service, and leadership growth.</p>
             </div>
           </div>
         </div>
@@ -640,6 +676,42 @@ function LandingPage({ onLogin, agents }) {
               </div>
               {error && <div style={{ color: 'var(--danger-red)', marginBottom: '1rem', fontStyle: 'italic', fontSize: '0.9rem' }}>{error}</div>}
               <button type="submit" className="btn" style={{ width: '100%', padding: '0.9rem', justifyContent: 'center' }}>Enter Portal</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showRegister && (
+        <div className="login-modal-overlay" onClick={() => setShowRegister(false)}>
+          <div className="login-container" onClick={e => e.stopPropagation()} style={{ maxWidth: '450px' }}>
+            <h2 style={{ color: 'var(--dark-text)', marginTop: 0, marginBottom: '0.5rem', textAlign: 'center' }}>Request Credentials</h2>
+            <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Submit your basic information to get access.</p>
+            <form onSubmit={handleRegister}>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ flex: 1, marginBottom: '1rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>First Name</label>
+                  <input type="text" required className="input-field" style={{ padding: '0.6rem', marginBottom: 0 }} value={regFirstName} onChange={e => setRegFirstName(e.target.value)} />
+                </div>
+                <div style={{ flex: 1, marginBottom: '1rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Last Name</label>
+                  <input type="text" required className="input-field" style={{ padding: '0.6rem', marginBottom: 0 }} value={regLastName} onChange={e => setRegLastName(e.target.value)} />
+                </div>
+              </div>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Email</label>
+                <input type="email" required className="input-field" style={{ padding: '0.6rem', marginBottom: 0 }} value={regEmail} onChange={e => setRegEmail(e.target.value)} />
+              </div>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ flex: 1, marginBottom: '1.5rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Username</label>
+                  <input type="text" required className="input-field" style={{ padding: '0.6rem', marginBottom: 0 }} value={regUsername} onChange={e => setRegUsername(e.target.value)} />
+                </div>
+                <div style={{ flex: 1, marginBottom: '1.5rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Password</label>
+                  <input type="password" required className="input-field" style={{ padding: '0.6rem', marginBottom: 0 }} value={regPassword} onChange={e => setRegPassword(e.target.value)} />
+                </div>
+              </div>
+              <button type="submit" className="btn" style={{ width: '100%', padding: '0.9rem', justifyContent: 'center' }}>Submit Request</button>
             </form>
           </div>
         </div>
@@ -798,20 +870,54 @@ function AgentDashboard({ agent, updateAgentTraining }) {
 
 function AdminDashboard({ agents, setAgents, checkSuccessDay, updateAgentTraining }) {
   const [editingAgent, setEditingAgent] = useState(null);
+  const [showAddAgent, setShowAddAgent] = useState(false);
+  const [regFirstName, setRegFirstName] = useState('');
+  const [regLastName, setRegLastName] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regUsername, setRegUsername] = useState('');
+  const [regPassword, setRegPassword] = useState('');
 
-  const updateAgentMetric = (id, field, value) => {
-    setAgents(agents.map(a => {
-      if (a.id === id) {
-        return { ...a, metrics: { ...a.metrics, [field]: Number(value) } };
-      }
-      return a;
-    }));
+  const handleAddAgent = (e) => {
+    e.preventDefault();
+    const newId = agents.length > 0 ? Math.max(...agents.map(a => a.id)) + 1 : 1;
+    const newAgent = {
+      id: newId,
+      name: `${regFirstName} ${regLastName}`,
+      username: regUsername,
+      password: regPassword,
+      email: regEmail,
+      metrics: { policyReviews: 0, quotedHHs: 0, itemsSold: 0, emailsResolved: 0, callVolume: 0, talkTime: 0, selfGeneratedQuotedHHs: 0, googleReviews: 0 },
+      training: {}
+    };
+    trainingModules.forEach(mod => { newAgent.training[mod.id] = 'Not Started'; });
+    setAgents([...agents, newAgent]);
+    setShowAddAgent(false);
+    setRegFirstName(''); setRegLastName(''); setRegEmail(''); setRegUsername(''); setRegPassword('');
   };
 
   return (
     <div>
-      <div className="panel">
-        <div className="panel-header">Admin Control Panel</div>
+      <div className="panel" style={{ position: 'relative' }}>
+        <div className="panel-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Admin Control Panel</span>
+          <button className="btn" onClick={() => setShowAddAgent(!showAddAgent)}>
+            {showAddAgent ? 'Cancel' : '+ Add New Agent'}
+          </button>
+        </div>
+
+        {showAddAgent && (
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid var(--primary-blue)', animation: 'slideIn 0.3s ease-out' }}>
+            <h3 style={{ marginTop: 0, color: 'var(--primary-blue)' }}>Add New Agent Profile</h3>
+            <form onSubmit={handleAddAgent} style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
+              <input type="text" placeholder="First Name" required className="input-field" style={{ flex: 1, minWidth: '150px', marginBottom: 0 }} value={regFirstName} onChange={e => setRegFirstName(e.target.value)} />
+              <input type="text" placeholder="Last Name" required className="input-field" style={{ flex: 1, minWidth: '150px', marginBottom: 0 }} value={regLastName} onChange={e => setRegLastName(e.target.value)} />
+              <input type="email" placeholder="Email" required className="input-field" style={{ flex: 1, minWidth: '200px', marginBottom: 0 }} value={regEmail} onChange={e => setRegEmail(e.target.value)} />
+              <input type="text" placeholder="Username" required className="input-field" style={{ flex: 1, minWidth: '120px', marginBottom: 0 }} value={regUsername} onChange={e => setRegUsername(e.target.value)} />
+              <input type="password" placeholder="Password" required className="input-field" style={{ flex: 1, minWidth: '120px', marginBottom: 0 }} value={regPassword} onChange={e => setRegPassword(e.target.value)} />
+              <button type="submit" className="btn btn-success" style={{ padding: '0.8rem 2rem' }}>Save</button>
+            </form>
+          </div>
+        )}
 
         <div style={{ overflowX: 'auto' }}>
           <table className="admin-table">
@@ -841,7 +947,7 @@ function AdminDashboard({ agents, setAgents, checkSuccessDay, updateAgentTrainin
                     </td>
                     <td>
                       <button className={`btn btn-outline ${editingAgent === a.id ? 'btn-success' : ''}`} style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }} onClick={() => setEditingAgent(editingAgent === a.id ? null : a.id)}>
-                        {editingAgent === a.id ? 'Close Panel' : 'Manage Agent'}
+                        {editingAgent === a.id ? 'Close Panel' : 'Manage Progress'}
                       </button>
                     </td>
                   </tr>
@@ -852,46 +958,57 @@ function AdminDashboard({ agents, setAgents, checkSuccessDay, updateAgentTrainin
         </div>
 
         {editingAgent && (
-          <div style={{ marginTop: '2rem', padding: '2rem', background: '#f8fafc', borderRadius: '16px', border: '1px solid var(--border-color)', animation: 'slideIn 0.3s ease-out' }}>
-            <h3 style={{ color: 'var(--dark-text)', marginTop: 0, marginBottom: '2rem', fontSize: '1.4rem' }}>
-              Managing Profile: {agents.find(a => a.id === editingAgent).name}
+          <div style={{ marginTop: '2rem', padding: '2rem', background: 'linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%)', borderRadius: '16px', color: 'white', animation: 'slideIn 0.3s ease-out', boxShadow: '0 10px 30px rgba(8, 59, 156, 0.2)' }}>
+            <h3 style={{ color: 'white', marginTop: 0, marginBottom: '1.5rem', fontSize: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.2)', paddingBottom: '0.75rem' }}>
+              Agent Training Progress: {agents.find(a => a.id === editingAgent).name}
             </h3>
-            <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
-              <div style={{ flex: 1, minWidth: '320px' }}>
-                <h4 style={{ marginBottom: '1.5rem', color: '#334155', borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem' }}>Performance Overrides</h4>
+            
+            <p style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', opacity: 0.9, fontWeight: 600 }}>Currently Working On:</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+              {trainingModules.filter(mod => agents.find(a => a.id === editingAgent).training[mod.id] === 'In Progress').length > 0 ? (
+                trainingModules.filter(mod => agents.find(a => a.id === editingAgent).training[mod.id] === 'In Progress').map(mod => (
+                  <div key={mod.id} style={{
+                    background: '#f59e0b',
+                    color: 'white',
+                    padding: '0.4rem 1rem',
+                    borderRadius: '999px',
+                    fontSize: '0.85rem',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    boxShadow: '0 4px 10px rgba(245, 158, 11, 0.3)'
+                  }}>
+                    <span style={{ fontSize: '1rem' }}>▶</span> {mod.title.replace(/^\d+\.\s*/, '')}
+                  </div>
+                ))
+              ) : (
+                <div style={{ opacity: 0.8, fontStyle: 'italic', fontSize: '0.95rem' }}>Agent is not currently working on any active modules.</div>
+              )}
+            </div>
 
-                <div className="metrics-input-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <label style={{ fontWeight: 600 }}>Policy Reviews (Goal 5):</label>
-                  <input type="number" className="input-field" style={{ width: '120px', marginBottom: 0 }} value={agents.find(a => a.id === editingAgent).metrics.policyReviews} onChange={e => updateAgentMetric(editingAgent, 'policyReviews', e.target.value)} />
-                </div>
-
-                <div className="metrics-input-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <label style={{ fontWeight: 600 }}>Items Sold (Goal 3):</label>
-                  <input type="number" className="input-field" style={{ width: '120px', marginBottom: 0 }} value={agents.find(a => a.id === editingAgent).metrics.itemsSold} onChange={e => updateAgentMetric(editingAgent, 'itemsSold', e.target.value)} />
-                </div>
-
-                <div className="metrics-input-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                  <label style={{ fontWeight: 600 }}>Talk Time (minutes):</label>
-                  <input type="number" className="input-field" style={{ width: '120px', marginBottom: 0 }} value={agents.find(a => a.id === editingAgent).metrics.talkTime} onChange={e => updateAgentMetric(editingAgent, 'talkTime', e.target.value)} />
-                </div>
-              </div>
-
-              <div style={{ flex: 2, minWidth: '400px' }}>
-                <h4 style={{ marginBottom: '1.5rem', color: '#334155', borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem' }}>Training Map Force Progress</h4>
-
-                <div className="dashboard-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-                  {trainingModules.map(mod => (
-                    <div key={mod.id} style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                      <label style={{ fontSize: '0.85rem', fontWeight: 600, display: 'block', marginBottom: '0.5rem', height: '35px', overflow: 'hidden' }}>{mod.title}</label>
-                      <select className="input-field" style={{ width: '100%', marginBottom: 0, padding: '0.5rem' }} value={agents.find(a => a.id === editingAgent).training[mod.id]} onChange={e => updateAgentTraining(editingAgent, mod.id, e.target.value)}>
-                        <option value="Not Started">Not Started</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                      </select>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <p style={{ margin: '2rem 0 1rem 0', fontSize: '1.1rem', opacity: 0.9, fontWeight: 600 }}>Completed Modules:</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              {trainingModules.filter(mod => agents.find(a => a.id === editingAgent).training[mod.id] === 'Completed').length > 0 ? (
+                trainingModules.filter(mod => agents.find(a => a.id === editingAgent).training[mod.id] === 'Completed').map(mod => (
+                  <div key={mod.id} style={{
+                    background: 'rgba(255,255,255,0.2)',
+                    color: 'white',
+                    padding: '0.3rem 0.75rem',
+                    borderRadius: '999px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem'
+                  }}>
+                    <span>✓</span> {mod.title.replace(/^\d+\.\s*/, '')}
+                  </div>
+                ))
+              ) : (
+                <div style={{ opacity: 0.8, fontStyle: 'italic', fontSize: '0.95rem' }}>No modules completed yet.</div>
+              )}
             </div>
           </div>
         )}
