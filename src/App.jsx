@@ -442,21 +442,75 @@ const trainingModules = [
 const initialAgents = [
   {
     id: 1,
+    name: 'Colleen',
+    username: 'colleen',
+    password: 'password',
+    metrics: { policyReviews: 0, quotedHHs: 0, itemsSold: 0, emailsResolved: 0, callVolume: 0, talkTime: 0, selfGeneratedQuotedHHs: 0, googleReviews: 0 },
+    training: {},
+    currentPage: ''
+  },
+  {
+    id: 2,
     name: 'Daniela',
     username: 'daniela',
     password: 'password',
     metrics: { policyReviews: 4, quotedHHs: 8, itemsSold: 2, emailsResolved: 15, callVolume: 45, talkTime: 120, selfGeneratedQuotedHHs: 3, googleReviews: 1 },
-    training: {}, // Will be initialized below
+    training: {},
     currentPage: 'Page 24: Apples to Apples'
   },
   {
-    id: 2,
-    name: 'Michael',
-    username: 'michael',
+    id: 3,
+    name: 'Krystal',
+    username: 'krystal',
+    password: 'password',
+    metrics: { policyReviews: 0, quotedHHs: 0, itemsSold: 0, emailsResolved: 0, callVolume: 0, talkTime: 0, selfGeneratedQuotedHHs: 0, googleReviews: 0 },
+    training: {},
+    currentPage: ''
+  },
+  {
+    id: 4,
+    name: 'Lori',
+    username: 'lori',
+    password: 'password',
+    metrics: { policyReviews: 0, quotedHHs: 0, itemsSold: 0, emailsResolved: 0, callVolume: 0, talkTime: 0, selfGeneratedQuotedHHs: 0, googleReviews: 0 },
+    training: {},
+    currentPage: ''
+  },
+  {
+    id: 5,
+    name: 'Gigi',
+    username: 'gigi',
+    password: 'password',
+    metrics: { policyReviews: 0, quotedHHs: 0, itemsSold: 0, emailsResolved: 0, callVolume: 0, talkTime: 0, selfGeneratedQuotedHHs: 0, googleReviews: 0 },
+    training: {},
+    currentPage: ''
+  },
+  {
+    id: 6,
+    name: 'Olivia',
+    username: 'olivia',
+    password: 'password',
+    metrics: { policyReviews: 0, quotedHHs: 0, itemsSold: 0, emailsResolved: 0, callVolume: 0, talkTime: 0, selfGeneratedQuotedHHs: 0, googleReviews: 0 },
+    training: {},
+    currentPage: ''
+  },
+  {
+    id: 7,
+    name: 'Michelle',
+    username: 'michelle',
     password: 'password',
     metrics: { policyReviews: 2, quotedHHs: 5, itemsSold: 0, emailsResolved: 8, callVolume: 30, talkTime: 95, selfGeneratedQuotedHHs: 1, googleReviews: 0 },
-    training: {}, // Will be initialized below
+    training: {},
     currentPage: 'Page 10: Auto Quote Flow'
+  },
+  {
+    id: 8,
+    name: 'Nicole',
+    username: 'nicole',
+    password: 'password',
+    metrics: { policyReviews: 0, quotedHHs: 0, itemsSold: 0, emailsResolved: 0, callVolume: 0, talkTime: 0, selfGeneratedQuotedHHs: 0, googleReviews: 0 },
+    training: {},
+    currentPage: ''
   }
 ];
 
