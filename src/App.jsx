@@ -613,8 +613,6 @@ function LandingPage({ onLogin, agents, setAgents }) {
           </div>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <button className="btn btn-outline" onClick={() => setShowLogin(true)}>Login</button>
-            <button className="btn" onClick={() => setShowRegister(true)}>Request Credentials</button>
-            <button className="btn" onClick={() => setShowLogin(true)}>Access Dashboard &rarr;</button>
           </div>
         </nav>
 
@@ -623,16 +621,11 @@ function LandingPage({ onLogin, agents, setAgents }) {
           <h1 className="gradient-animated" style={{ color: 'var(--primary-blue)', marginBottom: 0 }}>The Training Command Center</h1>
           <h1 className="gradient-animated" style={{ fontSize: '4.5rem', marginTop: 0 }}>for Insurance Teams</h1>
           <p style={{ fontSize: '1.25rem', maxWidth: '800px' }}>
-            Stop guessing. Start winning. Accelerate your career with our exclusive onboarding platform. 
-            Master the flow of auto and home quotes, build your personal brand, overcome daily objections, and become a top-producing agent. 
-            With 33 comprehensive training modules, script libraries, and real-time active tracking, you have everything you need to succeed.
+            Stop guessing. Start winning. Accelerate your career with our exclusive onboarding platform. Master the flow of auto and home quotes, build your personal brand, overcome daily objections, and become a top-producing agent.
           </p>
-          <div style={{ display: 'flex', gap: '1rem', justifyItems: 'center', marginTop: '1.5rem' }}>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem' }}>
             <button className="btn" style={{ fontSize: '1.15rem', padding: '1rem 2rem' }} onClick={() => setShowRegister(true)}>
-              Request Credentials
-            </button>
-            <button className="btn btn-outline" style={{ fontSize: '1.15rem', padding: '1rem 2rem' }} onClick={() => setShowLogin(true)}>
-              Access Dashboard &rarr;
+              Get Access Now
             </button>
           </div>
           
@@ -684,7 +677,7 @@ function LandingPage({ onLogin, agents, setAgents }) {
       {showRegister && (
         <div className="login-modal-overlay" onClick={() => setShowRegister(false)}>
           <div className="login-container" onClick={e => e.stopPropagation()} style={{ maxWidth: '450px' }}>
-            <h2 style={{ color: 'var(--dark-text)', marginTop: 0, marginBottom: '0.5rem', textAlign: 'center' }}>Request Credentials</h2>
+            <h2 style={{ color: 'var(--dark-text)', marginTop: 0, marginBottom: '0.5rem', textAlign: 'center' }}>Get Access Now</h2>
             <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Submit your basic information to get access.</p>
             <form onSubmit={handleRegister}>
               <div style={{ display: 'flex', gap: '1rem' }}>
