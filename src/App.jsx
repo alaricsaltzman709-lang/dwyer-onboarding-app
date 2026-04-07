@@ -677,19 +677,46 @@ function AgentDashboard({ agent, updateAgentTraining }) {
   return (
     <div>
       {/* OVERALL TRAINING PROGRESS CARD */}
-      <div className="overall-progress-card">
-        <div style={{ flex: 1 }}>
-          <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: 800 }}>Your Training Progress</h2>
-          <p style={{ margin: '0.5rem 0 0 0', opacity: 0.9, fontSize: '1.1rem' }}>
-            {completedModules} of {totalModules} Modules Completed • {inProgressModules} In Progress
-          </p>
-          <div className="progress-container">
-            <div className="progress-bar" style={{ width: `${progressPercent}%` }}></div>
+      <div className="overall-progress-card" style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
+          <div style={{ flex: 1 }}>
+            <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: 800 }}>Your Training Progress</h2>
+            <p style={{ margin: '0.5rem 0 0 0', opacity: 0.9, fontSize: '1.1rem' }}>
+              {completedModules} of {totalModules} Modules Completed • {inProgressModules} In Progress
+            </p>
+            <div className="progress-container">
+              <div className="progress-bar" style={{ width: `${progressPercent}%` }}></div>
+            </div>
+          </div>
+          <div style={{ fontSize: '3rem', fontWeight: 900, marginLeft: '2rem' }}>
+            {progressPercent}%
           </div>
         </div>
-        <div style={{ fontSize: '3rem', fontWeight: 900, marginLeft: '2rem' }}>
-          {progressPercent}%
-        </div>
+
+        {/* Active Modules Visual Display */}
+        {inProgressModules > 0 && (
+          <div style={{ marginTop: '1.5rem', width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '1rem' }}>
+            <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.9rem', opacity: 0.9, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Currently Working On:</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+              {trainingModules.filter(mod => agent.training[mod.id] === 'In Progress').map(mod => (
+                <div key={mod.id} style={{
+                  background: '#f59e0b',
+                  color: 'white',
+                  padding: '0.4rem 1rem',
+                  borderRadius: '999px',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  boxShadow: '0 4px 10px rgba(245, 158, 11, 0.3)'
+                }}>
+                  <span style={{ fontSize: '1rem' }}>▶</span> {mod.title.replace(/^\d+\.\s*/, '')}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="panel" style={{ paddingBottom: '3rem' }}>
