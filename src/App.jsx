@@ -650,6 +650,14 @@ function LandingPage({ onLogin, agents }) {
 
 function AgentDashboard({ agent, updateAgentTraining }) {
   const [expandedStep, setExpandedStep] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(0);
+
+  const categories = [
+    { title: "Core Workflows", start: 0, end: 6 },
+    { title: "Objection Handling", start: 6, end: 13 },
+    { title: "Sales Process", start: 13, end: 28 },
+    { title: "Advanced Topics", start: 28, end: 33 }
+  ];
 
   const getStatusClass = (status) => {
     if (status === 'Completed') return 'completed';
@@ -662,6 +670,9 @@ function AgentDashboard({ agent, updateAgentTraining }) {
   const completedModules = trainingModules.filter(mod => agent.training[mod.id] === 'Completed').length;
   const inProgressModules = trainingModules.filter(mod => agent.training[mod.id] === 'In Progress').length;
   const progressPercent = Math.round((completedModules / totalModules) * 100);
+
+  const currentCategory = categories[activeCategory];
+  const activeModules = trainingModules.slice(currentCategory.start, currentCategory.end);
 
   return (
     <div>
@@ -685,8 +696,32 @@ function AgentDashboard({ agent, updateAgentTraining }) {
         <h2 style={{ color: 'var(--dark-text)', margin: '0 0 0.5rem 0', fontSize: '1.6rem' }}>RPOA Success Guide - Complete Training Map</h2>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Follow the path to finalize your core competencies. Each module builds on the last—complete them in order for maximum impact.</p>
 
+        <div className="category-tabs" style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap', borderBottom: '2px solid var(--border-color)' }}>
+          {categories.map((cat, idx) => (
+            <button
+              key={idx}
+              className="btn"
+              style={{
+                borderRadius: '8px 8px 0 0',
+                padding: '0.75rem 1.5rem',
+                borderBottom: activeCategory === idx ? 'none' : '1px solid var(--border-color)',
+                marginBottom: '-2px',
+                background: activeCategory === idx ? 'var(--primary-blue)' : 'var(--bg-blue)',
+                color: activeCategory === idx ? 'white' : 'var(--primary-blue)',
+                fontWeight: activeCategory === idx ? 700 : 500,
+                transition: 'all 0.2s',
+                boxShadow: 'none'
+              }}
+              onClick={() => setActiveCategory(idx)}
+            >
+              {cat.title}
+            </button>
+          ))}
+        </div>
+
         <div className="training-map">
-          {trainingModules.map((mod, index) => {
+          {activeModules.map((mod) => {
+            const index = trainingModules.findIndex(m => m.id === mod.id);
             const status = agent.training[mod.id];
             const statusClass = getStatusClass(status);
             const isExpanded = expandedStep === mod.id;
@@ -728,54 +763,6 @@ function AgentDashboard({ agent, updateAgentTraining }) {
               </div>
             )
           })}
-        </div>
-      </div>
-
-      <div className="panel">
-        <div className="panel-header" style={{ marginBottom: '2rem' }}>Performance Accountability</div>
-        <div className="dashboard-grid">
-          <div className="metric-card">
-            <div className="metric-label">Policy Reviews</div>
-            <div className="metric-value">{agent.metrics.policyReviews}</div>
-            <div className="progress-container"><div className="progress-bar" style={{ width: `${Math.min(100, (agent.metrics.policyReviews / 5) * 100)}%` }}></div></div>
-            <div style={{ fontSize: '0.85rem', marginTop: '0.5rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Daily Goal: 5</div>
-          </div>
-          <div className="metric-card">
-            <div className="metric-label">Items Sold</div>
-            <div className="metric-value">{agent.metrics.itemsSold}</div>
-            <div className="progress-container"><div className="progress-bar" style={{ width: `${Math.min(100, (agent.metrics.itemsSold / 3) * 100)}%` }}></div></div>
-            <div style={{ fontSize: '0.85rem', marginTop: '0.5rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Daily Goal: 3</div>
-          </div>
-          <div className="metric-card">
-            <div className="metric-label">Quoted HHs</div>
-            <div className="metric-value">{agent.metrics.quotedHHs}</div>
-          </div>
-          <div className="metric-card">
-            <div className="metric-label">Daily Talk Time</div>
-            <div className="metric-value">{agent.metrics.talkTime} <span style={{ fontSize: '1rem' }}>min</span></div>
-          </div>
-        </div>
-
-        <h3 style={{ color: 'var(--dark-text)', marginTop: '3rem', marginBottom: '1.5rem', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.5rem' }}>Promotional Tracking</h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600, marginBottom: '0.5rem', color: '#334155' }}>
-              <span>Generation Station <span style={{ fontWeight: 400 }}>(Self-Generated Quoted HHs)</span></span>
-              <span>{agent.metrics.selfGeneratedQuotedHHs} / 10</span>
-            </div>
-            <div className="progress-container" style={{ height: '20px' }}>
-              <div className="progress-bar" style={{ width: `${Math.min(100, (agent.metrics.selfGeneratedQuotedHHs / 10) * 100)}%` }}></div>
-            </div>
-          </div>
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600, marginBottom: '0.5rem', color: '#334155' }}>
-              <span>Googley Eyes <span style={{ fontWeight: 400 }}>(Google Review Goals)</span></span>
-              <span>{agent.metrics.googleReviews} / 5</span>
-            </div>
-            <div className="progress-container" style={{ height: '20px' }}>
-              <div className="progress-bar" style={{ width: `${Math.min(100, (agent.metrics.googleReviews / 5) * 100)}%` }}></div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
